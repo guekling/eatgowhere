@@ -43,6 +43,7 @@ export default function (sequelize: Sequelize) {
         validate: {
           isIn: [['active', 'ended']],
         },
+        defaultValue: 'active'
       },
       created_by: {
         type: DataTypes.UUID,
