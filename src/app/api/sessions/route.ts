@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(session, { status: StatusCodes.CREATED });
   } catch (error) {
-    console.error('Error creating session:', error);
+    console.error("Error creating session:", error);
 
     const { message, status } = ErrorDetails[ErrorType.INTERNAL_SERVER_ERROR];
     return NextResponse.json({ error: message }, { status });
