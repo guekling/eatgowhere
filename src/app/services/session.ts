@@ -6,3 +6,11 @@ export async function createSession(): Promise<Session> {
 
   return session;
 }
+
+export async function getSessionById(
+  sessionId: string
+): Promise<Session | null> {
+  const session = await db.Session.findByPk(sessionId);
+
+  return session;
+}

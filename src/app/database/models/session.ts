@@ -1,5 +1,5 @@
-import { SessionStatus } from '@/app/lib/types';
-import { Model, DataTypes, Sequelize, Optional } from 'sequelize';
+import { SessionStatus } from "@/app/lib/types";
+import { Model, DataTypes, Sequelize, Optional } from "sequelize";
 
 export interface SessionAttributes {
   id: string;
@@ -7,24 +7,28 @@ export interface SessionAttributes {
   created_by?: string;
   ended_at?: Date;
   created_at: Date;
-  updated_at: Date
+  updated_at: Date;
 }
 
 export type SessionCreationAttributes = Optional<
-  SessionAttributes, 'id' | 'ended_at' | 'created_by' | 'updated_at'
+  SessionAttributes,
+  "id" | "ended_at" | "created_by" | "created_at" | "updated_at"
 >;
 
-export class Session extends Model<SessionAttributes, SessionCreationAttributes> {
+export class Session extends Model<
+  SessionAttributes,
+  SessionCreationAttributes
+> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static associate(models: any) {
     // A session has many users
     Session.hasMany(models.User, {
-      foreignKey: 'session_id',
+      foreignKey: "session_id",
     });
 
     // A session is created by a user
     Session.belongsTo(models.User, {
-      foreignKey: 'created_by',
+      foreignKey: "created_by",
     });
   }
 }
@@ -34,22 +38,22 @@ export default function (sequelize: Sequelize) {
     {
       id: {
         type: DataTypes.UUID,
-        defaultValue: sequelize.literal('gen_random_uuid()'),
+        defaultValue: sequelize.literal("gen_random_uuid()"),
         primaryKey: true,
       },
       status: {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
-          isIn: [['active', 'ended']],
+          isIn: [["active", "ended"]],
         },
-        defaultValue: 'active'
+        defaultValue: "active",
       },
       created_by: {
         type: DataTypes.UUID,
         references: {
-          model: 'users',
-          key: 'id',
+          model: "users",
+          key: "id",
         },
       },
       ended_at: {
@@ -58,20 +62,20 @@ export default function (sequelize: Sequelize) {
       },
       created_at: {
         type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('now()'),
+        defaultValue: Sequelize.literal("now()"),
       },
       updated_at: {
         type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('now()'),
+        defaultValue: Sequelize.literal("now()"),
       },
     },
     {
       sequelize,
-      modelName: 'Session',
-      tableName: 'sessions',
+      modelName: "Session",
+      tableName: "sessions",
       timestamps: true,
-      createdAt: 'created_at',
-      updatedAt: 'updated_at',
+      createdAt: "created_at",
+      updatedAt: "updated_at",
     }
   );
   return Session;

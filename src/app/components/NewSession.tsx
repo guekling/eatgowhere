@@ -5,15 +5,22 @@ import { API_CONFIG } from "../lib/api-config";
 import { HttpStatus, sendRequest } from "../utils/api";
 import { ErrorMessages } from "../lib/types";
 import { NewSessionResponse } from "../lib/interfaces";
+import LoadingPage from "./LoadingPage";
 
-export default function NewSession() {
-  const [error, setError] = useState("");
+interface NewSessionProps {
+  onSessionCreated: (sessionId: string) => void;
+}
+
+export default function NewSession({ onSessionCreated }: NewSessionProps) {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   async function handleCreateSession() {
+    setLoading(true);
     try {
       const response: NewSessionResponse = await sendRequest(
         API_CONFIG.createSession.url,
-        "POST",
+        API_CONFIG.createSession.method,
         [HttpStatus.CREATED]
       );
 
@@ -22,15 +29,22 @@ export default function NewSession() {
         return;
       }
 
-      console.log("Session created:", response);
+      onSessionCreated(response.id);
     } catch (error) {
       setError(ErrorMessages.CREATE_SESSION_ERROR);
+    } finally {
+      setLoading(false);
+      setError("");
     }
+  }
+
+  if (loading) {
+    return <LoadingPage />;
   }
 
   return (
     <>
-      <button onClick={handleCreateSession}>Create New Session</button>
+      <button onClick={handleCreateSession}>Start New Session</button>
       {error && <p>{error}</p>}
     </>
   );
