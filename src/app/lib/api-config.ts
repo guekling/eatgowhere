@@ -9,4 +9,12 @@ export const API_CONFIG = {
     url: "/api/sessions/:sessionId/users",
     method: HttpMethod.POST,
   },
+  getSession: {
+    url: "/api/sessions/:sessionId",
+    method: HttpMethod.GET,
+  },
+  validateSession: {
+    url: "/api/sessions/:sessionId",
+    method: HttpMethod.HEAD,
+  },
 };

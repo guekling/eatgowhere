@@ -25,10 +25,10 @@ export async function POST(
     }
 
     const sessionId = pathResult.data.id;
-    const { username } = bodyResult.data;
+    const { username, role } = bodyResult.data;
     // -- end validations --
 
-    const user = await createUser(sessionId, username, UserRoles.INITIATOR);
+    const user = await createUser(sessionId, username, role);
 
     return NextResponse.json(user, { status: StatusCodes.CREATED });
   } catch (error) {

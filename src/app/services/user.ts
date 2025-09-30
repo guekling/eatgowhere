@@ -1,7 +1,7 @@
 import { get } from "http";
 import db from "../database/models";
 import { User } from "../database/models/user";
-import { ErrorType, UserRoles } from "../lib/types";
+import { ErrorType, SessionStatus, UserRoles } from "../lib/types";
 import { getSessionById } from "./session";
 
 export async function createUser(
@@ -9,8 +9,9 @@ export async function createUser(
   username: string,
   role: UserRoles
 ): Promise<User> {
+  // @todo: refactor to use getValidSession
   const session = await getSessionById(sessionId);
-  if (!session) {
+  if (!session || session.getDataValue("status") !== SessionStatus.ACTIVE) {
     throw new Error(ErrorType.INVALID_SESSION);
   }
 

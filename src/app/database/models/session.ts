@@ -24,11 +24,13 @@ export class Session extends Model<
     // A session has many users
     Session.hasMany(models.User, {
       foreignKey: "session_id",
+      as: "users",
     });
 
     // A session is created by a user
     Session.belongsTo(models.User, {
       foreignKey: "created_by",
+      as: "creator",
     });
   }
 }

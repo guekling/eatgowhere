@@ -34,7 +34,10 @@ describe("POST /api/sessions/:id/users", () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: "testuser123" }),
+        body: JSON.stringify({
+          username: "testuser123",
+          role: UserRoles.INITIATOR,
+        }),
       }
     );
 
@@ -60,7 +63,10 @@ describe("POST /api/sessions/:id/users", () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: "testuser" }),
+        body: JSON.stringify({
+          username: "testuser",
+          role: UserRoles.INITIATOR,
+        }),
       }
     );
 
@@ -93,29 +99,38 @@ describe("POST /api/sessions/:id/users", () => {
     const sessionData: NewSessionResponse = await createSessionResponse.json();
     const sessionId = sessionData.id;
 
-    // add a user to the created session
-    const addUserRequest = new NextRequest(
-      `http://localhost/api/sessions/${sessionId}/users`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username: "test123user@!#;" }),
-      }
-    );
+    const invalidBodies = [
+      { username: "validuser", role: "INVALID_ROLE" },
+      { role: UserRoles.PARTICIPANT },
+      { username: "userwithoutrole" },
+      { username: "test123user@!#;", role: UserRoles.PARTICIPANT }, // invalid username type
+    ];
 
-    const addUserResponse = await POST_USER(addUserRequest, {
-      params: { id: sessionId },
-    });
-    const userData = await addUserResponse.json();
+    for (const invalidBody of invalidBodies) {
+      // add a user to the created session
+      const addUserRequest = new NextRequest(
+        `http://localhost/api/sessions/${sessionId}/users`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(invalidBody),
+        }
+      );
 
-    expect(addUserResponse.status).toBe(
-      ErrorDetails[ErrorType.VALIDATION_ERROR].status
-    );
-    expect(userData.error).toBe(
-      ErrorDetails[ErrorType.VALIDATION_ERROR].message
-    );
+      const addUserResponse = await POST_USER(addUserRequest, {
+        params: { id: sessionId },
+      });
+      const userData = await addUserResponse.json();
+
+      expect(addUserResponse.status).toBe(
+        ErrorDetails[ErrorType.VALIDATION_ERROR].status
+      );
+      expect(userData.error).toBe(
+        ErrorDetails[ErrorType.VALIDATION_ERROR].message
+      );
+    }
   });
 
   it("should return 409 for existing initiator", async () => {
@@ -126,7 +141,10 @@ describe("POST /api/sessions/:id/users", () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: "testuser" }),
+        body: JSON.stringify({
+          username: "testuser",
+          role: UserRoles.INITIATOR,
+        }),
       }
     );
 

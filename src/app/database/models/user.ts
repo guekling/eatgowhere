@@ -21,11 +21,13 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
     // A user belongs to a session
     User.belongsTo(models.Session, {
       foreignKey: "session_id",
+      as: "session",
     });
 
     // A user can create a session
     User.hasOne(models.Session, {
       foreignKey: "created_by",
+      as: "createdSession",
     });
   }
 }

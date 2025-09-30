@@ -21,3 +21,7 @@ export interface NewUserResponse {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface SessionInfo extends NewSessionResponse {
+  users: NewUserResponse[];
+}
