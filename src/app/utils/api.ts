@@ -42,8 +42,6 @@ export const sendRequest = async <T>(
       throw new Error("Unsupported HTTP method");
   }
 
-  console.log("responseStatus", response.status);
-
   if (acceptedResponseCodes.indexOf(response.status) === -1) {
     throw new Error(responseData.message || "Unexpected response");
   }

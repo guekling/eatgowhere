@@ -1,6 +1,7 @@
 import { SessionIdPathParams } from "@/app/lib/interfaces";
 import { ErrorDetails, ErrorType } from "@/app/lib/types";
 import { sessionIdPathParamsSchema } from "@/app/lib/validators";
+import { isUserAuthenticated } from "@/app/services/auth";
 import { getSessionInfo, getValidSession } from "@/app/services/session";
 import { StatusCodes } from "http-status-codes";
 import { NextRequest, NextResponse } from "next/server";
@@ -19,6 +20,11 @@ export async function GET(
 
     const sessionId = pathResult.data.id;
     // -- end validations --
+
+    // -- auth --
+    await isUserAuthenticated(sessionId);
+    // @todo: isValidSession
+    // -- end auth --
 
     const session = await getSessionInfo(sessionId);
 

@@ -10,6 +10,11 @@ export enum UserRoles {
   PARTICIPANT = "participant",
 }
 
+export type AccessTokenPayload = {
+  userId: string;
+  sessionId: string;
+};
+
 // ================================== //
 // Error Handling Types and Details  //
 // ================================== //
@@ -24,6 +29,8 @@ export enum ErrorType {
   VALIDATION_ERROR = "VALIDATION_ERROR",
   INVALID_SESSION = "INVALID_SESSION",
   INITIATOR_EXISTS = "INITIATOR_EXISTS",
+  UNAUTHORIZED = "UNAUTHORIZED",
+  RESTAURANT_EXISTS = "RESTAURANT_EXISTS",
 }
 
 export const ErrorDetails: Record<
@@ -44,6 +51,14 @@ export const ErrorDetails: Record<
   },
   [ErrorType.INITIATOR_EXISTS]: {
     message: "Initiator already exists",
+    status: StatusCodes.CONFLICT,
+  },
+  [ErrorType.UNAUTHORIZED]: {
+    message: "Unauthorized",
+    status: StatusCodes.UNAUTHORIZED,
+  },
+  [ErrorType.RESTAURANT_EXISTS]: {
+    message: "Restaurant already exists",
     status: StatusCodes.CONFLICT,
   },
 };

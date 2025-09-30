@@ -4,6 +4,7 @@ import {
   createUserBodySchema,
   sessionIdPathParamsSchema,
 } from "@/app/lib/validators";
+import { generateAccessToken } from "@/app/services/auth";
 import { createUser } from "@/app/services/user";
 import { StatusCodes } from "http-status-codes";
 import { NextRequest, NextResponse } from "next/server";
@@ -29,8 +30,20 @@ export async function POST(
     // -- end validations --
 
     const user = await createUser(sessionId, username, role);
+    const token = generateAccessToken({
+      userId: user.getDataValue("id"),
+      sessionId,
+    });
 
-    return NextResponse.json(user, { status: StatusCodes.CREATED });
+    const response = NextResponse.json(user, { status: StatusCodes.CREATED });
+    response.cookies.set("accessToken", token, {
+      httpOnly: true, // inaccessible to JavaScript in the browser
+      secure: process.env.NODE_ENV === "production", // send over HTTPS
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60, // 7 days - @todo: read from config
+      path: "/", // available to all routes on domain
+    });
+    return response;
   } catch (error) {
     console.error("Error creating user:", error);
 

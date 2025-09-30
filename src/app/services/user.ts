@@ -1,4 +1,3 @@
-import { get } from "http";
 import db from "../database/models";
 import { User } from "../database/models/user";
 import { ErrorType, SessionStatus, UserRoles } from "../lib/types";
@@ -35,5 +34,15 @@ export async function createUser(
     );
   }
 
+  return user;
+}
+
+export async function getUser(
+  userId: string,
+  sessionId: string
+): Promise<User | null> {
+  const user = await db.User.findOne({
+    where: { id: userId, session_id: sessionId },
+  });
   return user;
 }

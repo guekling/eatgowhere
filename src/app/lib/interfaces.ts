@@ -1,10 +1,13 @@
+import { RestaurantAttributes } from "../database/models/restaurant";
+import { SessionAttributes } from "../database/models/session";
+import { UserAttributes } from "../database/models/user";
 import { SessionStatus, UserRoles } from "./types";
 
 export interface SessionIdPathParams {
   id: string;
 }
 
-export interface NewSessionResponse {
+export interface NewSessionResponse extends SessionAttributes {
   id: string;
   status: SessionStatus;
   created_at: Date;
@@ -13,7 +16,7 @@ export interface NewSessionResponse {
   updated_by?: string;
 }
 
-export interface NewUserResponse {
+export interface NewUserResponse extends UserAttributes {
   id: string;
   username: string;
   session_id: string;
@@ -22,6 +25,24 @@ export interface NewUserResponse {
   updated_at: Date;
 }
 
+export interface GetSessionInfoResponse extends SessionInfo {}
+
+// --------------------------------------------- //
+// Extended interfaces for service return types //
+// -------------------------------------------- //
+
 export interface SessionInfo extends NewSessionResponse {
-  users: NewUserResponse[];
+  users: Record<string, UserRestaurantAttributes>;
+  restaurants?: RestaurantAttributes[];
+}
+
+export interface AuthResponse extends NewUserResponse {}
+
+export interface SessionAssociations extends SessionAttributes {
+  users: UserAttributes[];
+  restaurants: RestaurantAttributes[];
+}
+
+export interface UserRestaurantAttributes extends UserAttributes {
+  restaurant?: string;
 }

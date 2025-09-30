@@ -1,54 +1,59 @@
-import { UserRoles } from "@/app/lib/types";
 import { Model, DataTypes, Sequelize, Optional } from "sequelize";
 
-export interface UserAttributes {
+export interface RestaurantAttributes {
   id: string;
-  username: string;
+  name: string;
+  submitted_by: string;
   session_id: string;
-  role: UserRoles;
+  chosen: boolean;
   created_at: Date;
   updated_at: Date;
 }
 
-export type UserCreationAttributes = Optional<
-  UserAttributes,
-  "id" | "created_at" | "updated_at"
+export type RestaurantCreationAttributes = Optional<
+  RestaurantAttributes,
+  "id" | "chosen" | "created_at" | "updated_at"
 >;
 
-export class User extends Model<UserAttributes, UserCreationAttributes> {
+export class Restaurant extends Model<
+  RestaurantAttributes,
+  RestaurantCreationAttributes
+> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static associate(models: any) {
-    // A user belongs to a session
-    User.belongsTo(models.Session, {
+    // A restaurant belongs to a session
+    Restaurant.belongsTo(models.Session, {
       foreignKey: "session_id",
       as: "session",
     });
 
-    // A user can create a session
-    User.hasOne(models.Session, {
+    // A restaurant can be created by a user
+    Restaurant.hasOne(models.Session, {
       foreignKey: "created_by",
       as: "createdSession",
-    });
-
-    // A user can submit one restaurant
-    User.hasOne(models.Restaurant, {
-      foreignKey: "submitted_by",
-      as: "submittedRestaurant",
     });
   }
 }
 
 export default function (sequelize: Sequelize) {
-  User.init(
+  Restaurant.init(
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: sequelize.literal("gen_random_uuid()"),
         primaryKey: true,
       },
-      username: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      submitted_by: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
       session_id: {
         type: DataTypes.UUID,
@@ -58,12 +63,10 @@ export default function (sequelize: Sequelize) {
           key: "id",
         },
       },
-      role: {
-        type: DataTypes.TEXT,
+      chosen: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
-        validate: {
-          isIn: [["initiator", "participant"]],
-        },
+        defaultValue: false,
       },
       created_at: {
         type: DataTypes.DATE,
@@ -77,12 +80,12 @@ export default function (sequelize: Sequelize) {
     },
     {
       sequelize,
-      modelName: "User",
-      tableName: "users",
+      modelName: "Restaurant",
+      tableName: "restaurants",
       timestamps: true,
       createdAt: "created_at",
       updatedAt: "updated_at",
     }
   );
-  return User;
+  return Restaurant;
 }

@@ -16,3 +16,7 @@ export const createUserBodySchema = z.object({
     .regex(/^[a-zA-Z0-9_ ]+$/, "Invalid username"),
   role: z.enum([...Object.values(UserRoles)]),
 });
+
+export const createRestaurantBodySchema = z.object({
+  name: z.string().min(1).max(300).trim(),
+});

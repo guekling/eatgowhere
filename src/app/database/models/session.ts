@@ -32,6 +32,12 @@ export class Session extends Model<
       foreignKey: "created_by",
       as: "creator",
     });
+
+    // A session has many restaurants
+    Session.hasMany(models.Restaurant, {
+      foreignKey: "session_id",
+      as: "restaurants",
+    });
   }
 }
 

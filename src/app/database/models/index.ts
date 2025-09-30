@@ -3,6 +3,7 @@ import { Sequelize, Dialect, Options } from "sequelize";
 
 import SessionFactory from "./session";
 import UserFactory from "./user";
+import RestaurantFactory from "./restaurant";
 
 const database = process.env.DB_NAME || "eatgowhere";
 const username = process.env.DB_USER || "admin";
@@ -23,12 +24,14 @@ const sequelize = new Sequelize(database, username, password, sequelizeOptions);
 // Explicitly initialize models
 const Session = SessionFactory(sequelize);
 const User = UserFactory(sequelize);
+const Restaurant = RestaurantFactory(sequelize);
 
 const db = {
   sequelize,
   Sequelize,
   Session,
   User,
+  Restaurant,
   // Add other models here
 };
 

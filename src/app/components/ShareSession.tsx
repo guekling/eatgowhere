@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface ShareSessionProps {
@@ -11,6 +12,8 @@ export default function ShareSession({
   sessionId,
   username,
 }: ShareSessionProps) {
+  const router = useRouter();
+
   const inviteLink = `${window.location.origin}/sessions/${sessionId}/join`;
 
   const [isCopySuccessful, setIsCopySuccessful] = useState<boolean>(false);
@@ -31,7 +34,9 @@ export default function ShareSession({
       <p>Share this invite link with your friends</p>
       <button onClick={handleCopyLink}>{inviteLink}</button>
       {isCopySuccessful && <p>Copied!</p>}
-      <button>View Session Details</button>
+      <button onClick={() => router.push(`/sessions/${sessionId}`)}>
+        View Session Details
+      </button>
     </>
   );
 }

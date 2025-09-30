@@ -53,6 +53,63 @@ describe("POST /api/sessions/:id/users", () => {
     expect(userData).toHaveProperty("role", UserRoles.INITIATOR);
   });
 
+  it("should add a participant user to an existing session", async () => {
+    // add a user to the created session
+    const addUserRequest = new NextRequest(
+      `http://localhost/api/sessions/${existingInitiatorSessionId}/users`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "testuser123",
+          role: UserRoles.PARTICIPANT,
+        }),
+      }
+    );
+
+    const addUserResponse = await POST_USER(addUserRequest, {
+      params: { id: existingInitiatorSessionId },
+    });
+    const userData: NewUserResponse = await addUserResponse.json();
+
+    expect(addUserResponse.status).toBe(StatusCodes.CREATED);
+    expect(userData).toHaveProperty("id");
+    expect(userData).toHaveProperty("session_id", existingInitiatorSessionId);
+    expect(userData).toHaveProperty("username");
+    expect(userData).toHaveProperty("role", UserRoles.PARTICIPANT);
+  });
+
+  it('should set a cookie named "accessToken" upon user creation', async () => {
+    // add a user to the created session
+    const addUserRequest = new NextRequest(
+      `http://localhost/api/sessions/${existingInitiatorSessionId}/users`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "testuser123",
+          role: UserRoles.PARTICIPANT,
+        }),
+      }
+    );
+
+    const addUserResponse = await POST_USER(addUserRequest, {
+      params: { id: existingInitiatorSessionId },
+    });
+    expect(addUserResponse.status).toBe(StatusCodes.CREATED);
+
+    const cookie = addUserResponse.headers.get("Set-Cookie");
+    const match = cookie?.match(/accessToken=([^;]*)/);
+    const accessToken = match ? match[1] : null;
+    expect(accessToken).not.toBeNull();
+    expect(accessToken).toBeTruthy();
+    expect(accessToken).not.toBe("");
+  });
+
   it("should return 400 for invalid session ID", async () => {
     const invalidSessionId = randomUUID();
 
