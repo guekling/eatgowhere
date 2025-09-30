@@ -45,3 +45,12 @@ export async function isUserAuthenticated(
 
   return user;
 }
+
+export async function isUserInitiator(userId: string, sessionId: string) {
+  const user = await getUser(userId, sessionId);
+  if (!user || user.getDataValue("role") !== "initiator") {
+    throw new Error(ErrorType.FORBIDDEN);
+  }
+
+  return true;
+}

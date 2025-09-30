@@ -31,6 +31,8 @@ export enum ErrorType {
   INITIATOR_EXISTS = "INITIATOR_EXISTS",
   UNAUTHORIZED = "UNAUTHORIZED",
   RESTAURANT_EXISTS = "RESTAURANT_EXISTS",
+  FORBIDDEN = "FORBIDDEN",
+  BAD_REQUEST = "BAD_REQUEST",
 }
 
 export const ErrorDetails: Record<
@@ -60,5 +62,13 @@ export const ErrorDetails: Record<
   [ErrorType.RESTAURANT_EXISTS]: {
     message: "Restaurant already exists",
     status: StatusCodes.CONFLICT,
+  },
+  [ErrorType.FORBIDDEN]: {
+    message: "Forbidden",
+    status: StatusCodes.FORBIDDEN,
+  },
+  [ErrorType.BAD_REQUEST]: {
+    message: "Bad request",
+    status: StatusCodes.BAD_REQUEST,
   },
 };

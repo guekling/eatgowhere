@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
 import db from "../database/models";
-import { Session } from "../database/models/session";
+import { Session, SessionAttributes } from "../database/models/session";
 import { ErrorType, SessionStatus, UserRoles } from "../lib/types";
 import { RestaurantAttributes } from "../database/models/restaurant";
 import {
@@ -9,6 +9,7 @@ import {
   UserRestaurantAttributes,
 } from "../lib/interfaces";
 import { UserAttributes } from "../database/models/user";
+import { getRestaurantsBySessionId, updateRestaurant } from "./restaurant";
 
 export async function createSession(): Promise<Session> {
   const session = await db.Session.create();
@@ -58,6 +59,7 @@ export async function getSessionInfo(sessionId: string): Promise<SessionInfo> {
 
   const sessionData: SessionAssociations = session.toJSON();
 
+  let chosenRestaurant: string | undefined = undefined;
   const sessionRestaurants = sessionData.restaurants;
   const reduceUsers = sessionData.users.reduce(
     (acc: Record<string, UserRestaurantAttributes>, user: UserAttributes) => {
@@ -71,6 +73,10 @@ export async function getSessionInfo(sessionId: string): Promise<SessionInfo> {
         restaurant: restaurant ? restaurant.name : undefined,
       };
 
+      if (restaurant && restaurant.chosen) {
+        chosenRestaurant = restaurant.name;
+      }
+
       acc[user.id] = newUserObject;
       return acc;
     },
@@ -79,7 +85,40 @@ export async function getSessionInfo(sessionId: string): Promise<SessionInfo> {
 
   return {
     ...sessionData,
+    chosen_restaurant: chosenRestaurant,
     users: reduceUsers,
     restaurants: undefined,
   };
+}
+
+export async function updateSession(
+  sessionId: string,
+  updates: Partial<SessionAttributes>
+): Promise<Session> {
+  const [affectedRow, [updatedSession]] = await db.Session.update(
+    { ...updates },
+    { where: { id: sessionId }, returning: true }
+  );
+
+  if (affectedRow !== 1) {
+    throw new Error(ErrorType.BAD_REQUEST);
+  }
+
+  if (updates.status === SessionStatus.ENDED) {
+    await endSession(sessionId);
+  }
+
+  return updatedSession;
+}
+
+export async function endSession(sessionId: string): Promise<void> {
+  const restaurants = await getRestaurantsBySessionId(sessionId);
+
+  if (restaurants.length > 0) {
+    const randomIndex = Math.floor(Math.random() * restaurants.length);
+    const chosenRestaurant = restaurants[randomIndex];
+    await updateRestaurant(chosenRestaurant.getDataValue("id"), {
+      chosen: true,
+    });
+  }
 }

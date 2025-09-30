@@ -1,8 +1,15 @@
 import { SessionIdPathParams } from "@/app/lib/interfaces";
-import { ErrorDetails, ErrorType } from "@/app/lib/types";
-import { sessionIdPathParamsSchema } from "@/app/lib/validators";
-import { isUserAuthenticated } from "@/app/services/auth";
-import { getSessionInfo, getValidSession } from "@/app/services/session";
+import { ErrorDetails, ErrorType, SessionStatus } from "@/app/lib/types";
+import {
+  sessionIdPathParamsSchema,
+  updateSessionBodySchema,
+} from "@/app/lib/validators";
+import { isUserAuthenticated, isUserInitiator } from "@/app/services/auth";
+import {
+  getSessionInfo,
+  getValidSession,
+  updateSession,
+} from "@/app/services/session";
 import { StatusCodes } from "http-status-codes";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -67,6 +74,46 @@ export async function HEAD(
       const { message, status } = ErrorDetails[ErrorType.INVALID_SESSION];
       return NextResponse.json({ error: message }, { status });
     }
+
+    const { message, status } = ErrorDetails[ErrorType.INTERNAL_SERVER_ERROR];
+    return NextResponse.json({ error: message }, { status });
+  }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: SessionIdPathParams }
+) {
+  try {
+    // -- validations --
+    const pathResult = sessionIdPathParamsSchema.safeParse(await params);
+
+    const body = await request.json();
+    const bodyResult = updateSessionBodySchema.safeParse(body);
+
+    if (!pathResult.success || !bodyResult.success) {
+      const { message, status } = ErrorDetails[ErrorType.VALIDATION_ERROR];
+      return NextResponse.json({ error: message }, { status });
+    }
+
+    const sessionId = pathResult.data.id;
+    const { status, ended_at } = bodyResult.data;
+    // -- end validations --
+
+    // -- auth --
+    const user = await isUserAuthenticated(sessionId);
+    await isUserInitiator(user.getDataValue("id"), sessionId);
+    // @todo: isValidSession
+    // -- end auth --
+
+    const updatedSession = await updateSession(sessionId, {
+      status,
+      ended_at: new Date(ended_at),
+    });
+
+    return NextResponse.json(updatedSession, { status: StatusCodes.OK });
+  } catch (error) {
+    console.error("Error updating session:", error);
 
     const { message, status } = ErrorDetails[ErrorType.INTERNAL_SERVER_ERROR];
     return NextResponse.json({ error: message }, { status });

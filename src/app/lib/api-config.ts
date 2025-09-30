@@ -17,6 +17,10 @@ export const API_CONFIG = {
     url: "/api/sessions/:sessionId",
     method: HttpMethod.HEAD,
   },
+  updateSession: {
+    url: "/api/sessions/:sessionId",
+    method: HttpMethod.PATCH,
+  },
   createRestaurant: {
     url: "/api/sessions/:sessionId/restaurants",
     method: HttpMethod.POST,

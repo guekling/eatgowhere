@@ -2,6 +2,7 @@
 
 import CreateRestaurantModal from "@/app/components/CreateRestaurantModal";
 import LoadingPage from "@/app/components/LoadingPage";
+import SessionFooter from "@/app/components/SessionFooter";
 import SessionInvalidPage from "@/app/components/SessionInvalidPage";
 import SessionUsersTable from "@/app/components/SessionUsersTable";
 import { UserAttributes } from "@/app/database/models/user";
@@ -111,6 +112,14 @@ export default function Session() {
         sessionId={sessionId}
         onClose={() => setShowCreateRestaurantModal(false)}
         onSuccess={getSessionInfo}
+      />
+
+      <SessionFooter
+        sessionId={sessionId}
+        userRole={user?.role!}
+        sessionStatus={sessionInfo?.status}
+        chosenRestaurant={sessionInfo?.chosen_restaurant}
+        onSessionEnded={getSessionInfo}
       />
     </main>
   );

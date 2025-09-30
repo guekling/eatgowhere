@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { UserRoles } from "./types";
+import { UserRoles, SessionStatus } from "./types";
 
 export const sessionIdPathParamsSchema = z.object({
   id: z.uuid(),
@@ -19,4 +19,9 @@ export const createUserBodySchema = z.object({
 
 export const createRestaurantBodySchema = z.object({
   name: z.string().min(1).max(300).trim(),
+});
+
+export const updateSessionBodySchema = z.object({
+  status: z.enum([...Object.values(SessionStatus)]),
+  ended_at: z.iso.datetime(),
 });
