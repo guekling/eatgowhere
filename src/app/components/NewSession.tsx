@@ -43,9 +43,16 @@ export default function NewSession({ onSessionCreated }: NewSessionProps) {
   }
 
   return (
-    <>
-      <button onClick={handleCreateSession}>Start New Session</button>
-      {error && <p>{error}</p>}
-    </>
+    <div className="w-full max-w-sm flex flex-col items-center">
+      <button
+        className="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 transition mb-2"
+        onClick={handleCreateSession}
+      >
+        Start New Session
+      </button>
+      {error && (
+        <div className="w-full text-center text-red-600 mt-2">{error}</div>
+      )}
+    </div>
   );
 }

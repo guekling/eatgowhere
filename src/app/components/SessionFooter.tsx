@@ -23,6 +23,8 @@ export default function SessionFooter({
   const [error, setError] = useState<string>("");
 
   const handleEndSession = async () => {
+    setError("");
+
     try {
       const response: UpdateSessionResponse = await sendRequest(
         API_CONFIG.updateSession.url.replace(":sessionId", sessionId),
@@ -47,15 +49,24 @@ export default function SessionFooter({
 
   return (
     <section>
-      {userRole === UserRoles.INITIATOR && (
-        <>
-          <button onClick={handleEndSession}>End Session</button>
-          {error && <p>{error}</p>}
-        </>
-      )}
+      {userRole === UserRoles.INITIATOR &&
+        sessionStatus !== SessionStatus.ENDED && (
+          <>
+            <button
+              className="py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700 transition"
+              onClick={handleEndSession}
+            >
+              End Session
+            </button>
+            {error && <p>{error}</p>}
+          </>
+        )}
 
       {sessionStatus === SessionStatus.ENDED && (
-        <p>Lunch Location: {chosenRestaurant}</p>
+        <p className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-100 text-green-800 font-semibold shadow-sm border border-green-200">
+          <span className="font-bold">Lunch Location:</span>
+          <span>{chosenRestaurant}</span>
+        </p>
       )}
     </section>
   );

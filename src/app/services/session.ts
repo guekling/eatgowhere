@@ -25,13 +25,14 @@ export async function getSessionById(
   return session;
 }
 
-export async function getValidSession(sessionId: string): Promise<Session> {
+export async function getValidSession(
+  sessionId: string,
+  includeEnded = false
+): Promise<Session> {
   const session = await db.Session.findOne({
     where: {
       id: sessionId,
-      status: {
-        [Op.ne]: SessionStatus.ENDED,
-      },
+      ...(includeEnded ? {} : { status: { [Op.ne]: SessionStatus.ENDED } }),
       created_by: {
         [Op.not]: null as any,
       },

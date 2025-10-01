@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { AccessTokenPayload, ErrorType } from "../lib/types";
 import { getUser } from "./user";
 import { User } from "../database/models/user";
+import { getValidSession } from "./session";
 
 const secretKey: jwt.Secret = process.env.JWT_SECRET || "your_jwt_secret_key";
 const expiry: jwt.SignOptions["expiresIn"] =
@@ -40,6 +41,11 @@ export async function isUserAuthenticated(
     !user ||
     (requestSessionId && user.getDataValue("session_id") !== requestSessionId)
   ) {
+    throw new Error(ErrorType.UNAUTHORIZED);
+  }
+
+  const isValidSession = await getValidSession(userData.sessionId, true);
+  if (!isValidSession) {
     throw new Error(ErrorType.UNAUTHORIZED);
   }
 
