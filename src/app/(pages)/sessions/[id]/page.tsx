@@ -78,7 +78,7 @@ export default function Session() {
     };
 
     checkAuth();
-  }, []);
+  }, [sessionId]);
 
   useEffect(() => {
     if (isUserAuthenticated) {
@@ -109,7 +109,7 @@ export default function Session() {
           <h1 className="text-2xl font-bold mb-4">Hello, {user?.username}</h1>
           <p className="mb-6 text-gray-700 text-center">
             {!sessionInfo?.chosen_restaurant
-              ? "Just one second, collecting restaurant suggestions..."
+              ? "Collecting restaurant suggestions..."
               : "We've chosen a restaurant!"}
           </p>
 
@@ -122,7 +122,7 @@ export default function Session() {
 
           <SessionFooter
             sessionId={sessionId}
-            userRole={user?.role!}
+            userRole={user?.role}
             sessionStatus={sessionInfo?.status}
             chosenRestaurant={sessionInfo?.chosen_restaurant}
             onSessionEnded={getSessionInfo}

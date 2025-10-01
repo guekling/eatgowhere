@@ -31,7 +31,6 @@ export async function POST(
 
     // -- auth --
     const user = await isUserAuthenticated(sessionId);
-    // @todo: isValidSession
     // -- end auth --
 
     const restaurant = await createRestaurant({

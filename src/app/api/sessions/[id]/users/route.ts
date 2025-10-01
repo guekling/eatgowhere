@@ -1,5 +1,5 @@
 import { SessionIdPathParams } from "@/app/lib/interfaces";
-import { ErrorDetails, ErrorType, UserRoles } from "@/app/lib/types";
+import { ErrorDetails, ErrorType } from "@/app/lib/types";
 import {
   createUserBodySchema,
   sessionIdPathParamsSchema,

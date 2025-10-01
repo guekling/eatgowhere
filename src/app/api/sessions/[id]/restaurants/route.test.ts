@@ -1,8 +1,8 @@
 import { RestaurantAttributes } from "@/app/database/models/restaurant";
-import { NewSessionResponse, NewUserResponse } from "@/app/lib/interfaces";
+import { NewSessionResponse } from "@/app/lib/interfaces";
 import { ErrorDetails, ErrorType, UserRoles } from "@/app/lib/types";
 import { StatusCodes } from "http-status-codes";
-import { after, NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import { POST as POST_SESSION } from "../../route";
 import { POST as POST_USER } from "./../users/route";
 import { POST as POST_RESTAURANT } from "./route";

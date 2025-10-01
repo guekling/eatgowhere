@@ -1,5 +1,5 @@
 import { SessionIdPathParams } from "@/app/lib/interfaces";
-import { ErrorDetails, ErrorType, SessionStatus } from "@/app/lib/types";
+import { ErrorDetails, ErrorType } from "@/app/lib/types";
 import {
   sessionIdPathParamsSchema,
   updateSessionBodySchema,
@@ -30,7 +30,6 @@ export async function GET(
 
     // -- auth --
     await isUserAuthenticated(sessionId);
-    // @todo: isValidSession
     // -- end auth --
 
     const session = await getSessionInfo(sessionId);
@@ -103,7 +102,6 @@ export async function PATCH(
     // -- auth --
     const user = await isUserAuthenticated(sessionId);
     await isUserInitiator(user.getDataValue("id"), sessionId);
-    // @todo: isValidSession
     // -- end auth --
 
     const updatedSession = await updateSession(sessionId, {

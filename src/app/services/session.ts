@@ -1,7 +1,7 @@
 import { Op } from "sequelize";
 import db from "../database/models";
 import { Session, SessionAttributes } from "../database/models/session";
-import { ErrorType, SessionStatus, UserRoles } from "../lib/types";
+import { ErrorType, SessionStatus } from "../lib/types";
 import { RestaurantAttributes } from "../database/models/restaurant";
 import {
   SessionAssociations,

@@ -19,7 +19,6 @@ export default function CreateRestaurantModal({
 }: CreateRestaurantModalProps) {
   const [restaurantName, setRestaurantName] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

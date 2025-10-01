@@ -6,7 +6,7 @@ import { UpdateSessionResponse } from "../lib/interfaces";
 
 interface SessionFooterProps {
   sessionId: string;
-  userRole: UserRoles;
+  userRole?: UserRoles;
   sessionStatus?: SessionStatus;
   chosenRestaurant?: string;
   onSessionEnded: () => void;

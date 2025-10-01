@@ -1,7 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { sendRequest } from "../utils/api";
 import Home from "./page";
-import { useRouter } from "next/navigation";
 import { AuthResponse } from "../lib/interfaces";
 import { UserRoles } from "../lib/types";
 import { NewSessionProps } from "../components/NewSession";
