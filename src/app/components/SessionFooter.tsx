@@ -1,4 +1,3 @@
-import { Session } from "inspector/promises";
 import { SessionStatus, UserRoles } from "../lib/types";
 import { useState } from "react";
 import { HttpStatus, sendRequest } from "../utils/api";

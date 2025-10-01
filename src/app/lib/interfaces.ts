@@ -29,6 +29,8 @@ export interface GetSessionInfoResponse extends SessionInfo {}
 
 export interface UpdateSessionResponse extends SessionAttributes {}
 
+export interface AuthResponse extends NewUserResponse {}
+
 // --------------------------------------------- //
 // Extended interfaces for service return types //
 // -------------------------------------------- //
@@ -38,8 +40,6 @@ export interface SessionInfo extends NewSessionResponse {
   users: Record<string, UserRestaurantAttributes>;
   restaurants?: RestaurantAttributes[];
 }
-
-export interface AuthResponse extends NewUserResponse {}
 
 export interface SessionAssociations extends SessionAttributes {
   users: UserAttributes[];

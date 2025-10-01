@@ -1,4 +1,5 @@
 import db from "./app/database/models";
+import "@testing-library/jest-dom";
 
 afterAll(async () => {
   try {

@@ -7,7 +7,7 @@ import { ErrorMessages } from "../lib/types";
 import { NewSessionResponse } from "../lib/interfaces";
 import LoadingPage from "./LoadingPage";
 
-interface NewSessionProps {
+export interface NewSessionProps {
   onSessionCreated: (sessionId: string) => void;
 }
 
