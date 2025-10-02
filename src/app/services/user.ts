@@ -8,7 +8,7 @@ export async function createUser(
   username: string,
   role: UserRoles
 ): Promise<User> {
-  // @todo: refactor to use getValidSession
+  // @todo: refactor to use getValidSession, or re-evaluate if its still necessary
   const session = await getSessionById(sessionId);
   if (!session || session.getDataValue("status") !== SessionStatus.ACTIVE) {
     throw new Error(ErrorType.INVALID_SESSION);

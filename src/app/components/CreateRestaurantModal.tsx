@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { API_CONFIG } from "../lib/api-config";
 import { HttpStatus, sendRequest } from "../utils/api";
+import { AddRestaurantResponse } from "../lib/interfaces";
 
 interface CreateRestaurantModalProps {
   isModalOpen: boolean;
@@ -25,7 +26,7 @@ export default function CreateRestaurantModal({
     setError("");
 
     try {
-      const response = await sendRequest(
+      const response: AddRestaurantResponse = await sendRequest(
         API_CONFIG.createRestaurant.url.replace(":sessionId", sessionId),
         API_CONFIG.createRestaurant.method,
         [HttpStatus.CREATED],

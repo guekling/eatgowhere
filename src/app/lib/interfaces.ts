@@ -29,6 +29,8 @@ export interface GetSessionInfoResponse extends SessionInfo {}
 
 export interface UpdateSessionResponse extends SessionAttributes {}
 
+export interface AddRestaurantResponse extends RestaurantAttributes {}
+
 export interface AuthResponse extends NewUserResponse {}
 
 // --------------------------------------------- //

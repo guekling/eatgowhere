@@ -38,6 +38,11 @@ export async function GET(
   } catch (error) {
     console.error("Error getting session info:", error);
 
+    if (error instanceof Error && error.message === ErrorType.UNAUTHORIZED) {
+      const { message, status } = ErrorDetails[ErrorType.UNAUTHORIZED];
+      return NextResponse.json({ error: message }, { status });
+    }
+
     if (error instanceof Error && error.message === ErrorType.INVALID_SESSION) {
       const { message, status } = ErrorDetails[ErrorType.INVALID_SESSION];
       return NextResponse.json({ error: message }, { status });
@@ -112,6 +117,21 @@ export async function PATCH(
     return NextResponse.json(updatedSession, { status: StatusCodes.OK });
   } catch (error) {
     console.error("Error updating session:", error);
+
+    if (error instanceof Error && error.message === ErrorType.UNAUTHORIZED) {
+      const { message, status } = ErrorDetails[ErrorType.UNAUTHORIZED];
+      return NextResponse.json({ error: message }, { status });
+    }
+
+    if (error instanceof Error && error.message === ErrorType.FORBIDDEN) {
+      const { message, status } = ErrorDetails[ErrorType.FORBIDDEN];
+      return NextResponse.json({ error: message }, { status });
+    }
+
+    if (error instanceof Error && error.message === ErrorType.BAD_REQUEST) {
+      const { message, status } = ErrorDetails[ErrorType.BAD_REQUEST];
+      return NextResponse.json({ error: message }, { status });
+    }
 
     const { message, status } = ErrorDetails[ErrorType.INTERNAL_SERVER_ERROR];
     return NextResponse.json({ error: message }, { status });
