@@ -15,8 +15,6 @@ Not sure where to eat for lunch? Fret not, let our app decide for you!
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-  - [Stack](#stack)
 - [Project Structure](#project-structure)
 - [Local Project Setup](#local-project-setup)
   - [Pre-Requisites](#pre-requisites)
@@ -38,6 +36,8 @@ Not sure where to eat for lunch? Fret not, let our app decide for you!
   - [Features](#features)
 
 ## Project Structure
+
+<details>
 
 ```
 eatgowhere/
@@ -85,11 +85,13 @@ eatgowhere/
             └── api.ts
 ```
 
+</details>
+
 ## Local Project Setup
 
 ### Pre-Requisites
 
-<details open>
+<details>
 
 #### 1. Get a version manager
 
@@ -136,6 +138,8 @@ You will need to create the `.env.local` and `.env.test` files.
 You may copy the following environment variables and their values for the `.env.test` file.
 
 ```
+# .env.test
+
 DB_NAME=eatgowhere_test
 DB_USER=admin
 DB_PASSWORD=admin
@@ -152,11 +156,26 @@ For the `.env.local` file,
 - Database information can be retrieved from the [docker-compose.yml](./docker-compose.yml) file. The values to change are `DB_PORT=5432`, `DB_NAME=eatgowhere` and `DB_HOST=db`.
 - The `JWT_SECRET` can be randomly generated and updated.
 - You may change the `ACCESS_TOKEN_EXPIRY` as you wish. Do note the limitations of the access token in our application. See our [Known Limitations](#known-limitations) and [User Authentication](#user-authentication) for more information.
+
+```
+# .env.local
+
+DB_NAME=eatgowhere
+DB_USER=admin
+DB_PASSWORD=admin
+DB_HOST=db
+DB_DIALECT=postgres
+DB_PORT=5432
+
+JWT_SECRET={YOUR_JWT_SECRET}
+ACCESS_TOKEN_EXPIRY={YOUR_ACCESS_TOKEN_EXPIRY}
+```
+
 </details>
 
 ### Running the Application
 
-<details open>
+<details>
 
 Run the following script in your terminal:
 
@@ -174,7 +193,7 @@ This will bring up all the Docker containers in development mode. This includes:
 
 ### Running the Tests
 
-<details open>
+<details>
 
 Run the following command in your terminal:
 
@@ -194,7 +213,7 @@ This command runs both frontend and backend tests. Currently, this repository on
 
 ### Working with Sequelize ORM
 
-<details open>
+<details>
 
 We use the Sequelize ORM to facilitate interaction with our PostgreSQL database.
 
@@ -217,7 +236,7 @@ npx sequelize-cli db:migrate:undo
 
 ## Requirements
 
-<details open>
+<details>
 
 1. A user can initiate a session and invite others to join it.
 
@@ -235,7 +254,7 @@ npx sequelize-cli db:migrate:undo
 
 ## User Flow
 
-<details open>
+<details>
 
 The following user flows can be viewed in the diagram below:
 
@@ -251,7 +270,7 @@ The following user flows can be viewed in the diagram below:
 
 ### Database
 
-<details open>
+<details>
 
 ![Database Schema](./public/database.png)
 
@@ -305,7 +324,7 @@ The following user flows can be viewed in the diagram below:
 
 #### Create Session
 
-<details open>
+<details>
 
 **POST** `/api/sessions`
 
@@ -336,7 +355,7 @@ None
 
 #### Get Session
 
-<details open>
+<details>
 
 **GET** `/api/sessions/:id`
 
@@ -380,7 +399,7 @@ None
 
 #### Check Session
 
-<details open>
+<details>
 
 **HEAD** `/api/sessions/:id`
 
@@ -404,7 +423,7 @@ No content
 
 #### Update Session
 
-<details open>
+<details>
 
 **PATCH** `/api/sessions/:id`
 
@@ -444,7 +463,7 @@ Update session
 
 #### Add User
 
-<details open>
+<details>
 
 **POST** `/api/sessions/:id/users`
 
@@ -483,7 +502,7 @@ Add a user to a session
 
 #### Add Restaurant
 
-<details open>
+<details>
 
 **POST** `/api/sessions/:id/restaurants`
 
@@ -522,7 +541,7 @@ Add a restaurant to a session
 
 #### Authenticate
 
-<details open>
+<details>
 
 **GET** `/api/auth`
 
@@ -556,7 +575,7 @@ None
 
 ### User Authentication
 
-<details open>
+<details>
 This project uses JWT (JSON Web Tokens) stored in HTTP-only cookies for user authentication.
 
 Our implementation is kind of a hybrid between **session-based authentication** and **JWT token authentication**.
@@ -576,7 +595,7 @@ We chose this approach because,
 
 ### User Authorisation
 
-<details open>
+<details>
 
 This project implements a simplified version of Role-Based Access Control.
 
@@ -611,7 +630,7 @@ This would make it easier to manage the roles and permissions should the applica
 
 ### Invite Link
 
-<details open>
+<details>
 
 This project generates shareable invite links using the Session ID. The invite link is in the format, `/sessions/:session_id/join`.
 
@@ -634,6 +653,8 @@ That said, we can consider using invite tokens as a potential enhancement as the
 
 ## Known Limitations
 
+<details>
+
 - A user is tied to the browser they are using. Therefore:
   - They are unable to view information about the session they have joined from another browser on the same device; and
   - They are unable to join more than 1 session at a time.
@@ -650,9 +671,11 @@ That said, we can consider using invite tokens as a potential enhancement as the
 - The table in the Session Details page, displaying the session's users and restaurants, does not cater for many users.
   - The table is non-scrollable and there is no pagination.
 
+</details>
+
 ## Future Improvements
 
-<details open>
+<details>
 
 ### Tech Debt
 
